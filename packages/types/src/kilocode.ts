@@ -33,7 +33,6 @@ export const kiloCodeModelMetaDataSchema = z.object({
 	recommendations: z
 		.object({
 			diff: toggle.optional(),
-			fastApply: toggle.optional(),
 			todoList: toggle.optional(),
 		})
 		.optional(),
