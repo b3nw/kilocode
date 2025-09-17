@@ -21,7 +21,6 @@
 	"pricing": {
 		"costUnknown": "التكلفة غير معروفة",
 		"costUnknownDescription": "لم يقدم مزود واجهة برمجة التطبيقات أي بيانات تكلفة أو تم إلغاء الطلب.",
-		"freeModelsDescription": "النماذج المجانية قد يكون لها حدود على الاستخدام. استخدم الرابط أدناه لتحسين استخدامك للنماذج المجانية!",
 		"freeModelsLink": "اكتشف خيارات النماذج المجانية والاقتصادية",
 		"openRouterMarkup": "يتضمن مزود Kilo Code جميع نماذج OpenRouter، بدون رسوم إضافية وبعمولة 0%!",
 		"switchToKiloCode": "التبديل إلى Kilo Code"
@@ -78,7 +77,7 @@
 		},
 		"systemNotifications": {
 			"label": "تفعيل إشعارات النظام",
-			"description": "عند التفعيل، سيرسل Kilo Code إشعارات النظام للأحداث المهمة مثل إكمال المهام أو الأخطاء.",
+			"description": "عند التفعيل، سيرسل Kilo Code إشعارات النظام للأحداث المهمة مثل إكمال المهمة أو الأخطاء.",
 			"testButton": "اختبار الإشعار",
 			"testTitle": "Kilo Code",
 			"testMessage": "هذا إشعار اختباري من Kilo Code."
