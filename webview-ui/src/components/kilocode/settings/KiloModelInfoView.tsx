@@ -96,7 +96,7 @@ const RecommendedSettings = ({
 		),
 		recommendedSetting(
 			"disableTodoList",
-			() => recommendations.todoList !== "disabled" || !(recommendations.todoList ?? true),
+			() => recommendations.todoList !== "disabled" || !(apiConfiguration.todoListEnabled ?? true),
 			() => setApiConfigurationField("todoListEnabled", false),
 		),
 	]
