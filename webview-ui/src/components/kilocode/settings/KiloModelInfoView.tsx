@@ -3,7 +3,6 @@ import { useAppTranslation } from "@src/i18n/TranslationContext"
 import { ModelDescriptionMarkdown } from "../../settings/ModelDescriptionMarkdown"
 import { ModelInfoSupportsItem } from "@/components/settings/ModelInfoView"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger, StandardTooltip } from "@/components/ui"
-import { FreeModelsInfoView } from "../FreeModelsLink"
 import { useQuery } from "@tanstack/react-query"
 import { getKiloBaseUriFromToken } from "@roo/kilocode/token"
 import { telemetryClient } from "@/utils/TelemetryClient"
@@ -115,9 +114,6 @@ export const KiloModelInfoView = ({
 					isExpanded={isDescriptionExpanded}
 					setIsExpanded={setIsDescriptionExpanded}
 				/>
-			)}
-			{apiConfiguration.apiProvider === "kilocode" && modelId.endsWith(":free") && (
-				<FreeModelsInfoView modelId={modelId} origin="settings" />
 			)}
 			<div className="text-sm text-vscode-descriptionForeground">
 				<ModelInfoSupportsItem
