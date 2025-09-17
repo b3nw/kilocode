@@ -103,16 +103,16 @@ const RecommendedSettings = ({
 	const notAppliedSettings = recommendedSettings.filter((setting) => !setting.isApplied())
 	return (
 		notAppliedSettings.length > 0 && (
-			<div className="bg-vscode-editor-background text-vscode-descriptionForeground border p-1">
-				{t("kilocode:settings.modelInfo.recommendedSettings")}
-				<ul>
+			<div className="bg-vscode-editor-background text-vscode-descriptionForeground border p-3">
+				<div>{t("kilocode:settings.modelInfo.recommendedSettings")}</div>
+				<ul className="list-disc ml-3 my-3">
 					{notAppliedSettings.map((s) => (
 						<li key={s.key}>{t(`kilocode:settings.modelInfo.recommendations.${s.key}`)}</li>
 					))}
 				</ul>
 				<VSCodeButton
 					appearance="primary"
-					className="mt-3 w-full"
+					className="w-full"
 					onClick={() => {
 						for (const setting of notAppliedSettings) {
 							setting.apply()
