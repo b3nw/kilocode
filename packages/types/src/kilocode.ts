@@ -26,16 +26,18 @@ export const kiloCodeClineMessageMetaDataSchema = z.object({
 
 export type KiloCodeClineMessageMetaData = z.infer<typeof kiloCodeClineMessageMetaDataSchema>
 
-const toggle = z.enum(["enable", "disable"])
+const toggleSchema = z.enum(["enabled", "disabled"])
+
+const recommendationsSchema = z.object({
+	diff: toggleSchema.optional(),
+	todoList: toggleSchema.optional(),
+})
+
+export type Recommendations = z.infer<typeof recommendationsSchema>
 
 export const kiloCodeModelMetaDataSchema = z.object({
 	preferredIndex: z.number().optional(),
-	recommendations: z
-		.object({
-			diff: toggle.optional(),
-			todoList: toggle.optional(),
-		})
-		.optional(),
+	recommendations: recommendationsSchema.optional(),
 })
 
 export type KiloCodeModelMetaData = z.infer<typeof kiloCodeModelMetaDataSchema>

@@ -1,4 +1,4 @@
-import { type ModelInfo, type ProviderSettings } from "@roo-code/types"
+import { Recommendations, TelemetryEventName, type ModelInfo, type ProviderSettings } from "@roo-code/types"
 import { useAppTranslation } from "@src/i18n/TranslationContext"
 import { ModelDescriptionMarkdown } from "../../settings/ModelDescriptionMarkdown"
 import { ModelInfoSupportsItem } from "@/components/settings/ModelInfoView"
@@ -7,6 +7,10 @@ import { useQuery } from "@tanstack/react-query"
 import { getKiloBaseUriFromToken } from "@roo/kilocode/token"
 import { telemetryClient } from "@/utils/TelemetryClient"
 import { useModelProviders } from "@/components/ui/hooks/useSelectedModel"
+import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
+import { t } from "i18next"
+
+type SetApiConfigurationField = <K extends keyof ProviderSettings>(field: K, value: ProviderSettings[K]) => void
 
 type ModelStats = {
 	model: string
@@ -69,8 +73,62 @@ const PricingTable = ({ providers }: { providers: (ModelInfo & { label: string }
 	)
 }
 
+function recommendedSetting(key: string, isApplied: () => boolean, apply: () => void) {
+	return { key, isApplied, apply }
+}
+
+const RecommendedSettings = ({
+	apiConfiguration,
+	setApiConfigurationField,
+	modelId,
+	recommendations,
+}: {
+	apiConfiguration: ProviderSettings
+	setApiConfigurationField: SetApiConfigurationField
+	modelId: string
+	recommendations: Recommendations
+}) => {
+	const recommendedSettings = [
+		recommendedSetting(
+			"disableDiff",
+			() => recommendations.diff !== "disabled" || !(apiConfiguration.diffEnabled ?? true),
+			() => setApiConfigurationField("diffEnabled", false),
+		),
+		recommendedSetting(
+			"disableTodoList",
+			() => recommendations.todoList !== "disabled" || !(recommendations.todoList ?? true),
+			() => setApiConfigurationField("todoListEnabled", false),
+		),
+	]
+	const notAppliedSettings = recommendedSettings.filter((setting) => !setting.isApplied())
+	return (
+		notAppliedSettings.length > 0 && (
+			<div className="bg-vscode-editor-background text-vscode-descriptionForeground border p-1">
+				{t("kilocode:settings.modelInfo.recommendedSettings")}
+				<ul>
+					{notAppliedSettings.map((s) => (
+						<li key={s.key}>{t(`kilocode:settings.modelInfo.recommendations.${s.key}`)}</li>
+					))}
+				</ul>
+				<VSCodeButton
+					appearance="primary"
+					className="mt-3 w-full"
+					onClick={() => {
+						for (const setting of notAppliedSettings) {
+							setting.apply()
+						}
+						telemetryClient.capture(TelemetryEventName.APPLY_RECOMMENDED_SETTINGS_CLICKED, { modelId })
+					}}>
+					{t("kilocode:settings.modelInfo.applyRecommendedSettings")}
+				</VSCodeButton>
+			</div>
+		)
+	)
+}
+
 export const KiloModelInfoView = ({
 	apiConfiguration,
+	setApiConfigurationField,
 	modelId,
 	model,
 	isDescriptionExpanded,
@@ -79,6 +137,7 @@ export const KiloModelInfoView = ({
 	setIsPricingExpanded,
 }: {
 	apiConfiguration: ProviderSettings
+	setApiConfigurationField: SetApiConfigurationField
 	modelId: string
 	model: ModelInfo
 	isDescriptionExpanded: boolean
@@ -113,6 +172,14 @@ export const KiloModelInfoView = ({
 					markdown={model.description}
 					isExpanded={isDescriptionExpanded}
 					setIsExpanded={setIsDescriptionExpanded}
+				/>
+			)}
+			{!!model.kiloCode?.recommendations && (
+				<RecommendedSettings
+					modelId={modelId}
+					recommendations={model.kiloCode.recommendations}
+					apiConfiguration={apiConfiguration}
+					setApiConfigurationField={setApiConfigurationField}
 				/>
 			)}
 			<div className="text-sm text-vscode-descriptionForeground">

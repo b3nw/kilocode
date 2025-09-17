@@ -79,6 +79,12 @@
 				"outputPrice": "Cost per million tokens for the completion.",
 				"cacheReadPrice": "Cost per million tokens for reading from the cache.",
 				"cacheWritePrice": "Cost per million tokens for writing to the cache."
+			},
+			"recommendedSettings": "Kilo Code has the following recommendations to improve the experience using this model:",
+			"applyRecommendedSettings": "Apply Recommended Settings",
+			"recommendations": {
+				"disableDiff": "Disable editing through diffs.",
+				"disableTodoList": "Disable todo list tool."
 			}
 		},
 		"contextManagement": {
