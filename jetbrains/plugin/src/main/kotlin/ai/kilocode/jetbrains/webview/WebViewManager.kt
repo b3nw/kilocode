@@ -618,14 +618,12 @@ class WebViewInstance(
                                         console.log("CSS variables set as style attribute of HTML tag");
                                         
                                         // Add theme class to body element for styled-components compatibility
-                                        if (document.body) {
-                                            // Remove existing theme classes
-                                            document.body.classList.remove('vscode-dark', 'vscode-light');
-                                            
-                                            // Add appropriate theme class based on current theme
-                                            document.body.classList.add('$bodyThemeClass');
-                                            console.log("Added theme class to body: " + themeClass);
-                                        }
+                                        // Remove existing theme classes
+                                        document.body.classList.remove('vscode-dark', 'vscode-light');
+                                        
+                                        // Add appropriate theme class based on current theme
+                                        document.body.classList.add('$bodyThemeClass');
+                                        console.log("Added theme class to body: $bodyThemeClass");
                                     } catch (error) {
                                         console.error("Error processing CSS variables and theme classes:", error);
                                     }
