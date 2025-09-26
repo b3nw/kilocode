@@ -47,7 +47,7 @@ export class ChutesHandler extends BaseOpenAiCompatibleProvider<ChutesModelId> {
 	override async *createMessage(systemPrompt: string, messages: Anthropic.Messages.MessageParam[]): ApiStream {
 		const model = this.getModel()
 
-		if (model.id.includes("DeepSeek-R1")) {
+		if (model.id.includes("DeepSeek-R1") || model.id.includes("Thinking")) {
 			const stream = await this.client.chat.completions.create({
 				...this.getCompletionParams(systemPrompt, messages),
 				messages: convertToR1Format([{ role: "user", content: systemPrompt }, ...messages]),
@@ -92,11 +92,12 @@ export class ChutesHandler extends BaseOpenAiCompatibleProvider<ChutesModelId> {
 	override getModel() {
 		const model = super.getModel()
 		const isDeepSeekR1 = model.id.includes("DeepSeek-R1")
+		const isThinkingModel = model.id.includes("Thinking")
 		return {
 			...model,
 			info: {
 				...model.info,
-				temperature: isDeepSeekR1 ? DEEP_SEEK_DEFAULT_TEMPERATURE : this.defaultTemperature,
+				temperature: isDeepSeekR1 || isThinkingModel ? DEEP_SEEK_DEFAULT_TEMPERATURE : this.defaultTemperature,
 			},
 		}
 	}

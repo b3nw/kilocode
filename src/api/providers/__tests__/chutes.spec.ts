@@ -470,4 +470,132 @@ describe("ChutesHandler", () => {
 		const model = handlerWithModel.getModel()
 		expect(model.info.temperature).toBe(0.5)
 	})
+
+	it("should handle GLM-4.5-FP8-Thinking model with correct configuration", () => {
+		const testModelId: ChutesModelId = "zai-org/GLM-4.5-FP8-Thinking"
+		const handlerWithModel = new ChutesHandler({
+			apiModelId: testModelId,
+			chutesApiKey: "test-chutes-api-key",
+		})
+		const model = handlerWithModel.getModel()
+		expect(model.id).toBe(testModelId)
+		expect(model.info).toEqual(
+			expect.objectContaining({
+				maxTokens: 32768,
+				contextWindow: 131072,
+				supportsImages: false,
+				supportsPromptCache: false,
+				inputPrice: 0.41,
+				outputPrice: 1.65,
+				description:
+					"Reasoning-first model with structured thinking traces for multi-step problems, math proofs, and code synthesis.",
+				temperature: DEEP_SEEK_DEFAULT_TEMPERATURE, // Thinking models use DeepSeek default temperature
+			}),
+		)
+	})
+
+	it("should handle thinking model reasoning format", async () => {
+		// Override the mock for this specific test
+		mockCreate.mockImplementationOnce(async () => ({
+			[Symbol.asyncIterator]: async function* () {
+				yield {
+					choices: [
+						{
+							delta: { content: "</think>Thinking step by step..." },
+							index: 0,
+						},
+					],
+					usage: null,
+				}
+				yield {
+					choices: [
+						{
+							delta: { content: "</think>Here's the solution" },
+							index: 0,
+						},
+					],
+					usage: null,
+				}
+				yield {
+					choices: [
+						{
+							delta: {},
+							index: 0,
+						},
+					],
+					usage: { prompt_tokens: 15, completion_tokens: 10 },
+				}
+			},
+		}))
+
+		const systemPrompt = "You are a helpful assistant."
+		const messages: Anthropic.Messages.MessageParam[] = [{ role: "user", content: "Solve this math problem" }]
+		vi.spyOn(handler, "getModel").mockReturnValue({
+			id: "zai-org/GLM-4.5-FP8-Thinking",
+			info: { maxTokens: 1024, temperature: DEEP_SEEK_DEFAULT_TEMPERATURE },
+		} as any)
+
+		const stream = handler.createMessage(systemPrompt, messages)
+		const chunks = []
+		for await (const chunk of stream) {
+			chunks.push(chunk)
+		}
+
+		expect(chunks).toEqual([
+			{ type: "text", text: "Thinking step by step..." },
+			{ type: "text", text: "</think>Here's the solution" },
+			{ type: "usage", inputTokens: 15, outputTokens: 10 },
+		])
+	})
+
+	it("should apply DeepSeek default temperature for thinking models", () => {
+		const testModelId: ChutesModelId = "zai-org/GLM-4.5-FP8-Thinking"
+		const handlerWithModel = new ChutesHandler({
+			apiModelId: testModelId,
+			chutesApiKey: "test-chutes-api-key",
+		})
+		const model = handlerWithModel.getModel()
+		expect(model.info.temperature).toBe(DEEP_SEEK_DEFAULT_TEMPERATURE)
+	})
+
+	it("createMessage should pass correct parameters to Chutes client for thinking models", async () => {
+		const modelId: ChutesModelId = "zai-org/GLM-4.5-FP8-Thinking"
+
+		// Clear previous mocks and set up new implementation
+		mockCreate.mockClear()
+		mockCreate.mockImplementationOnce(async () => ({
+			[Symbol.asyncIterator]: async function* () {
+				// Empty stream for this test
+			},
+		}))
+
+		const handlerWithModel = new ChutesHandler({
+			apiModelId: modelId,
+			chutesApiKey: "test-chutes-api-key",
+		})
+
+		const systemPrompt = "Test system prompt for thinking model"
+		const messages: Anthropic.Messages.MessageParam[] = [
+			{ role: "user", content: "Test message for thinking model" },
+		]
+
+		const messageGenerator = handlerWithModel.createMessage(systemPrompt, messages)
+		await messageGenerator.next()
+
+		expect(mockCreate).toHaveBeenCalledWith(
+			expect.objectContaining({
+				model: modelId,
+				messages: [
+					{
+						role: "user",
+						content: `${systemPrompt}\n${messages[0].content}`,
+					},
+				],
+				max_tokens: 32768,
+				temperature: DEEP_SEEK_DEFAULT_TEMPERATURE,
+				stream: true,
+				stream_options: { include_usage: true },
+			}),
+		)
+	})
 })

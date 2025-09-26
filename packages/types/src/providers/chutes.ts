@@ -37,6 +37,7 @@ export type ChutesModelId =
 	// kilocode_change start
 	| "zai-org/GLM-4.5-turbo"
 	| "zai-org/GLM-4.5V"
+	| "zai-org/GLM-4.5-FP8-Thinking"
 	// kilocode_change end
 	| "moonshotai/Kimi-K2-Instruct-75k"
 	| "moonshotai/Kimi-K2-Instruct-0905"
@@ -336,6 +337,16 @@ export const chutesModels = {
 		description: "GLM-4.5V model.",
 	},
 	// kilocode_change end
+	"zai-org/GLM-4.5-FP8-Thinking": {
+		maxTokens: 32768,
+		contextWindow: 131072,
+		supportsImages: false,
+		supportsPromptCache: false,
+		inputPrice: 0.41,
+		outputPrice: 1.65,
+		description:
+			"Reasoning-first model with structured thinking traces for multi-step problems, math proofs, and code synthesis.",
+	},
 	"Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8": {
 		maxTokens: 32768,
 		contextWindow: 262144,
