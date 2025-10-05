@@ -51,6 +51,7 @@ export const dynamicProviders = [
 	"requesty",
 	"unbound",
 	"glama",
+	"nano-gpt",
 ] as const
 
 export type DynamicProvider = (typeof dynamicProviders)[number]
@@ -211,6 +212,14 @@ const claudeCodeSchema = apiModelIdProviderModelSchema.extend({
 const glamaSchema = baseProviderSettingsSchema.extend({
 	glamaModelId: z.string().optional(),
 	glamaApiKey: z.string().optional(),
+})
+
+export const nanoGptModelListSchema = z.enum(["all", "personalized", "subscription"])
+
+const nanoGptSchema = baseProviderSettingsSchema.extend({
+	nanoGptApiKey: z.string().optional(),
+	nanoGptModelId: z.string().optional(),
+	nanoGptModelList: nanoGptModelListSchema.optional(),
 })
 
 // kilocode_change start
@@ -475,6 +484,7 @@ export const providerSettingsSchemaDiscriminated = z.discriminatedUnion("apiProv
 	anthropicSchema.merge(z.object({ apiProvider: z.literal("anthropic") })),
 	claudeCodeSchema.merge(z.object({ apiProvider: z.literal("claude-code") })),
 	glamaSchema.merge(z.object({ apiProvider: z.literal("glama") })),
+	nanoGptSchema.merge(z.object({ apiProvider: z.literal("nano-gpt") })),
 	openRouterSchema.merge(z.object({ apiProvider: z.literal("openrouter") })),
 	bedrockSchema.merge(z.object({ apiProvider: z.literal("bedrock") })),
 	vertexSchema.merge(z.object({ apiProvider: z.literal("vertex") })),
@@ -521,6 +531,7 @@ export const providerSettingsSchema = z.object({
 	...anthropicSchema.shape,
 	...claudeCodeSchema.shape,
 	...glamaSchema.shape,
+	...nanoGptSchema.shape,
 	...openRouterSchema.shape,
 	...bedrockSchema.shape,
 	...vertexSchema.shape,
@@ -581,6 +592,7 @@ export const PROVIDER_SETTINGS_KEYS = providerSettingsSchema.keyof().options
 export const modelIdKeys = [
 	"apiModelId",
 	"glamaModelId",
+	"nanoGptModelId",
 	"openRouterModelId",
 	"openAiModelId",
 	"ollamaModelId",
@@ -616,6 +628,7 @@ export const modelIdKeysByProvider: Record<TypicalProvider, ModelIdKey> = {
 	anthropic: "apiModelId",
 	"claude-code": "apiModelId",
 	glama: "glamaModelId",
+	"nano-gpt": "nanoGptModelId",
 	openrouter: "openRouterModelId",
 	"kilocode-openrouter": "openRouterModelId",
 	bedrock: "apiModelId",
@@ -775,6 +788,7 @@ export const MODELS_BY_PROVIDER: Record<
 
 	// Dynamic providers; models pulled from the respective APIs.
 	glama: { id: "glama", label: "Glama", models: [] },
+	"nano-gpt": { id: "nano-gpt", label: "Nano-GPT", models: [] },
 	huggingface: { id: "huggingface", label: "Hugging Face", models: [] },
 	litellm: { id: "litellm", label: "LiteLLM", models: [] },
 	openrouter: { id: "openrouter", label: "OpenRouter", models: [] },
