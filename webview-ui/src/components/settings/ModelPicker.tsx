@@ -39,6 +39,7 @@ type ModelIdKey = keyof Pick<
 	| "litellmModelId"
 	// kilocode_change start
 	| "kilocodeModel"
+	| "nanoGptModelId"
 	// kilocode_change end
 	| "deepInfraModelId"
 	| "ioIntelligenceModelId"

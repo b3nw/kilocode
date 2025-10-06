@@ -800,6 +800,7 @@ export const webviewMessageHandler = async (
 				requesty: {},
 				unbound: {},
 				glama: {},
+				"nano-gpt": {},
 				ollama: {},
 				lmstudio: {},
 			}
@@ -852,6 +853,14 @@ export const webviewMessageHandler = async (
 						provider: "deepinfra",
 						apiKey: apiConfiguration.deepInfraApiKey,
 						baseUrl: apiConfiguration.deepInfraBaseUrl,
+					},
+				},
+				{
+					key: "nano-gpt",
+					options: {
+						provider: "nano-gpt",
+						apiKey: apiConfiguration.nanoGptApiKey,
+						nanoGptModelList: apiConfiguration.nanoGptModelList,
 					},
 				},
 			]

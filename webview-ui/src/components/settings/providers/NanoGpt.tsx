@@ -75,6 +75,9 @@ export const NanoGpt = ({
 						</VSCodeOption>
 					))}
 				</VSCodeDropdown>
+				<div className="text-sm text-vscode-descriptionForeground mt-1">
+					💡 Click &quot;Save&quot; to refresh the model list after changing this selection
+				</div>
 			</div>
 			<ModelPicker
 				apiConfiguration={apiConfiguration}

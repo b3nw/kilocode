@@ -1,8 +1,10 @@
 import OpenAI from "openai"
+import { Anthropic } from "@anthropic-ai/sdk"
 
 import { nanoGptDefaultModelId, nanoGptDefaultModelInfo } from "@roo-code/types"
 
 import type { ApiHandlerOptions, ModelRecord } from "../../shared/api"
+import type { ApiHandlerCreateMessageMetadata } from "../index"
 import { convertToOpenAiMessages } from "../transform/openai-format"
 import { ApiStreamChunk } from "../transform/stream"
 import { getModelParams } from "../transform/model-params"
@@ -33,11 +35,12 @@ export class NanoGptHandler extends BaseProvider implements SingleCompletionHand
 
 	async *createMessage(
 		systemPrompt: string,
-		messages: OpenAI.Chat.ChatCompletionMessageParam[],
+		messages: Anthropic.Messages.MessageParam[],
+		metadata?: ApiHandlerCreateMessageMetadata,
 	): AsyncGenerator<ApiStreamChunk> {
 		const model = await this.fetchModel()
 
-		const { id: modelId, maxTokens, temperature, topP } = model
+		const { id: modelId, maxTokens, temperature } = model
 
 		const openAiMessages: OpenAI.Chat.ChatCompletionMessageParam[] = [
 			{ role: "system", content: systemPrompt },
@@ -48,7 +51,6 @@ export class NanoGptHandler extends BaseProvider implements SingleCompletionHand
 			model: modelId,
 			...(maxTokens && maxTokens > 0 && { max_tokens: maxTokens }),
 			temperature,
-			top_p: topP,
 			messages: openAiMessages,
 			stream: true,
 			stream_options: { include_usage: true },
