@@ -18,6 +18,7 @@ import {
 	OpenAiNativeHandler,
 	DeepSeekHandler,
 	MoonshotHandler,
+	NanoGptHandler,
 	MistralHandler,
 	VsCodeLmHandler,
 	UnboundHandler,
@@ -141,6 +142,8 @@ export function buildApiHandler(configuration: ProviderSettings): ApiHandler {
 			return new QwenCodeHandler(options)
 		case "moonshot":
 			return new MoonshotHandler(options)
+		case "nano-gpt":
+			return new NanoGptHandler(options)
 		case "vscode-lm":
 			return new VsCodeLmHandler(options)
 		case "mistral":

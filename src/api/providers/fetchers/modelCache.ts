@@ -26,6 +26,7 @@ import { getIOIntelligenceModels } from "./io-intelligence"
 
 import { getDeepInfraModels } from "./deepinfra"
 import { getHuggingFaceModels } from "./huggingface"
+import { getNanoGptModels } from "./nano-gpt"
 
 const memoryCache = new NodeCache({ stdTTL: 5 * 60, checkperiod: 5 * 60 })
 
@@ -57,7 +58,12 @@ export /*kilocode_change*/ async function readModels(router: RouterName): Promis
 export const getModels = async (options: GetModelsOptions): Promise<ModelRecord> => {
 	const { provider } = options
 
-	let models = getModelsFromCache(provider)
+	// Build a cache key that includes relevant options to differentiate between different configurations
+	// For nano-gpt, we need to differentiate between different model list types
+	const cacheKey =
+		provider === "nano-gpt" && options.nanoGptModelList ? `${provider}:${options.nanoGptModelList}` : provider
+
+	let models = memoryCache.get<ModelRecord>(cacheKey as string)
 
 	if (models) {
 		return models
@@ -118,6 +124,12 @@ export const getModels = async (options: GetModelsOptions): Promise<ModelRecord>
 			case "huggingface":
 				models = await getHuggingFaceModels()
 				break
+			case "nano-gpt":
+				models = await getNanoGptModels({
+					nanoGptModelList: options.nanoGptModelList,
+					apiKey: options.apiKey,
+				})
+				break
 			default: {
 				// Ensures router is exhaustively checked if RouterName is a strict union.
 				const exhaustiveCheck: never = provider
@@ -126,7 +138,7 @@ export const getModels = async (options: GetModelsOptions): Promise<ModelRecord>
 		}
 
 		// Cache the fetched models (even if empty, to signify a successful fetch with no models).
-		memoryCache.set(provider, models)
+		memoryCache.set(cacheKey, models)
 
 		/* kilocode_change: skip useless file IO
 		await writeModels(provider, models).catch((err) =>
@@ -155,6 +167,13 @@ export const getModels = async (options: GetModelsOptions): Promise<ModelRecord>
  */
 export const flushModels = async (router: RouterName) => {
 	memoryCache.del(router)
+
+	// For nano-gpt, also flush all model list variants
+	if (router === "nano-gpt") {
+		memoryCache.del("nano-gpt:all")
+		memoryCache.del("nano-gpt:personalized")
+		memoryCache.del("nano-gpt:subscription")
+	}
 }
 
 export function getModelsFromCache(provider: ProviderName) {

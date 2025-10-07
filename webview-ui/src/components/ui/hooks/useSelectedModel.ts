@@ -444,6 +444,11 @@ function getSelectedModel({
 			const info = routerModels["vercel-ai-gateway"]?.[id]
 			return { id, info }
 		}
+		case "nano-gpt": {
+			const id = apiConfiguration.nanoGptModelId ?? "chatgpt-4o-latest"
+			const info = routerModels["nano-gpt"]?.[id]
+			return { id, info }
+		}
 		// case "anthropic":
 		// case "human-relay":
 		// case "fake-ai":
@@ -455,6 +460,7 @@ function getSelectedModel({
 				| "human-relay"
 				| "fake-ai"
 				| "kilocode-openrouter"
+				| "nano-gpt"
 			const id = apiConfiguration.apiModelId ?? anthropicDefaultModelId
 			const baseInfo = anthropicModels[id as keyof typeof anthropicModels]
 
