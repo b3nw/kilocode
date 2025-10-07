@@ -216,9 +216,6 @@ const ApiOptions = ({
 		openRouterApiKey: apiConfiguration?.openRouterApiKey,
 		kilocodeOrganizationId: apiConfiguration?.kilocodeOrganizationId ?? "personal",
 		deepInfraApiKey: apiConfiguration?.deepInfraApiKey,
-		chutesApiKey: apiConfiguration?.chutesApiKey,
-		nanoGptApiKey: apiConfiguration?.nanoGptApiKey,
-		nanoGptModelList: apiConfiguration?.nanoGptModelList,
 	})
 
 	//const { data: openRouterModelProviders } = useOpenRouterModelProviders(

@@ -53,6 +53,7 @@ export const dynamicProviders = [
 	"glama",
 	"chutes", // kilocode_change
 	"nano-gpt",
+	"nano-gpt",
 ] as const
 
 export type DynamicProvider = (typeof dynamicProviders)[number]

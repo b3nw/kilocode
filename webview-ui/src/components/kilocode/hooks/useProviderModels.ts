@@ -295,9 +295,6 @@ export const useProviderModels = (apiConfiguration?: ProviderSettings) => {
 		openRouterBaseUrl: apiConfiguration?.openRouterBaseUrl,
 		openRouterApiKey: apiConfiguration?.apiKey,
 		kilocodeOrganizationId: apiConfiguration?.kilocodeOrganizationId ?? "personal",
-		chutesApiKey: apiConfiguration?.chutesApiKey, // kilocode_change
-		nanoGptApiKey: apiConfiguration?.nanoGptApiKey,
-		nanoGptModelList: apiConfiguration?.nanoGptModelList,
 	})
 
 	const { models, defaultModel } =

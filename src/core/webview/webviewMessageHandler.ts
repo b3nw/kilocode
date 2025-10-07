@@ -802,6 +802,7 @@ export const webviewMessageHandler = async (
 				glama: {},
 				chutes: {}, // kilocode_change
 				"nano-gpt": {},
+				"nano-gpt": {},
 				ollama: {},
 				lmstudio: {},
 			}
