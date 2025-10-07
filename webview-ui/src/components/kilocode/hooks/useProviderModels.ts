@@ -49,6 +49,7 @@ import {
 	deepInfraDefaultModelId,
 	cerebrasModels,
 	cerebrasDefaultModelId,
+	nanoGptDefaultModelId,
 } from "@roo-code/types"
 import type { ModelRecord, RouterModels } from "@roo/api"
 import { useRouterModels } from "../../ui/hooks/useRouterModels"
@@ -271,6 +272,12 @@ export const getModelsByProvider = ({
 				defaultModel: deepInfraDefaultModelId,
 			}
 		}
+		case "nano-gpt": {
+			return {
+				models: routerModels["nano-gpt"],
+				defaultModel: nanoGptDefaultModelId,
+			}
+		}
 		default:
 			return {
 				models: {},
@@ -288,7 +295,6 @@ export const useProviderModels = (apiConfiguration?: ProviderSettings) => {
 		openRouterBaseUrl: apiConfiguration?.openRouterBaseUrl,
 		openRouterApiKey: apiConfiguration?.apiKey,
 		kilocodeOrganizationId: apiConfiguration?.kilocodeOrganizationId ?? "personal",
-		chutesApiKey: apiConfiguration?.chutesApiKey, // kilocode_change
 	})
 
 	const { models, defaultModel } =

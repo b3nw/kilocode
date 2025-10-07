@@ -21,6 +21,7 @@ describe("getModelsByProvider", () => {
 			unbound: { "test-model": testModel },
 			litellm: { "test-model": testModel },
 			"kilocode-openrouter": { "test-model": testModel },
+			"nano-gpt": { "test-model": testModel },
 			ollama: { "test-model": testModel },
 			lmstudio: { "test-model": testModel },
 			"io-intelligence": { "test-model": testModel },
@@ -34,6 +35,7 @@ describe("getModelsByProvider", () => {
 			"fake-ai", // don't know what this is
 			"huggingface", // don't know what this is
 			"human-relay", // no models
+			"nano-gpt", // dynamic provider - models fetched from API
 			"openai", // not implemented
 			"roo", // don't care
 			"virtual-quota-fallback", // no models

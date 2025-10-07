@@ -801,6 +801,7 @@ export const webviewMessageHandler = async (
 				unbound: {},
 				glama: {},
 				chutes: {}, // kilocode_change
+				"nano-gpt": {},
 				ollama: {},
 				lmstudio: {},
 			}
@@ -854,6 +855,14 @@ export const webviewMessageHandler = async (
 						provider: "deepinfra",
 						apiKey: apiConfiguration.deepInfraApiKey,
 						baseUrl: apiConfiguration.deepInfraBaseUrl,
+					},
+				},
+				{
+					key: "nano-gpt",
+					options: {
+						provider: "nano-gpt",
+						apiKey: apiConfiguration.nanoGptApiKey,
+						nanoGptModelList: apiConfiguration.nanoGptModelList,
 					},
 				},
 			]

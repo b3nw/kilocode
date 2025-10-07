@@ -39,6 +39,7 @@ import {
 	rooDefaultModelId,
 	vercelAiGatewayDefaultModelId,
 	deepInfraDefaultModelId,
+	nanoGptDefaultModelId,
 } from "@roo-code/types"
 
 import { vscode } from "@src/utils/vscode"
@@ -83,6 +84,7 @@ import {
 	LiteLLM,
 	Mistral,
 	Moonshot,
+	NanoGpt,
 	Ollama,
 	OpenAI,
 	OpenAICompatible,
@@ -214,7 +216,6 @@ const ApiOptions = ({
 		openRouterApiKey: apiConfiguration?.openRouterApiKey,
 		kilocodeOrganizationId: apiConfiguration?.kilocodeOrganizationId ?? "personal",
 		deepInfraApiKey: apiConfiguration?.deepInfraApiKey,
-		chutesApiKey: apiConfiguration?.chutesApiKey,
 	})
 
 	//const { data: openRouterModelProviders } = useOpenRouterModelProviders(
@@ -355,6 +356,7 @@ const ApiOptions = ({
 				unbound: { field: "unboundModelId", default: unboundDefaultModelId },
 				requesty: { field: "requestyModelId", default: requestyDefaultModelId },
 				litellm: { field: "litellmModelId", default: litellmDefaultModelId },
+				"nano-gpt": { field: "nanoGptModelId", default: nanoGptDefaultModelId },
 				anthropic: { field: "apiModelId", default: anthropicDefaultModelId },
 				cerebras: { field: "apiModelId", default: cerebrasDefaultModelId },
 				"claude-code": { field: "apiModelId", default: claudeCodeDefaultModelId },
@@ -623,6 +625,17 @@ const ApiOptions = ({
 
 			{selectedProvider === "moonshot" && (
 				<Moonshot apiConfiguration={apiConfiguration} setApiConfigurationField={setApiConfigurationField} />
+			)}
+
+			{selectedProvider === "nano-gpt" && (
+				<NanoGpt
+					apiConfiguration={apiConfiguration}
+					setApiConfigurationField={setApiConfigurationField}
+					routerModels={routerModels}
+					selectedModelId={selectedModelId}
+					organizationAllowList={organizationAllowList}
+					modelValidationError={modelValidationError}
+				/>
 			)}
 
 			{selectedProvider === "vscode-lm" && (
