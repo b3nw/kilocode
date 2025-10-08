@@ -465,8 +465,8 @@ describe("webviewMessageHandler - requestRouterModels", () => {
 			.mockRejectedValueOnce(new Error("Ollama API error")) // ollama
 			.mockRejectedValueOnce(new Error("Vercel AI Gateway error")) // vercel-ai-gateway
 			.mockRejectedValueOnce(new Error("DeepInfra API error")) // deepinfra
-			.mockRejectedValueOnce(new Error("OVHCloud AI Endpoints error")) // ovhcloud // kilocode_change
 			.mockRejectedValueOnce(new Error("Nano-GPT API error")) // nano-gpt
+			.mockRejectedValueOnce(new Error("OVHCloud AI Endpoints error")) // ovhcloud // kilocode_change
 			.mockRejectedValueOnce(new Error("LiteLLM connection failed")) // litellm
 
 		await webviewMessageHandler(mockClineProvider, {
@@ -514,6 +514,20 @@ describe("webviewMessageHandler - requestRouterModels", () => {
 		expect(mockClineProvider.postMessageToWebview).toHaveBeenCalledWith({
 			type: "singleRouterModelFetchResponse",
 			success: false,
+			error: "Ollama API error",
+			values: { provider: "ollama" },
+		})
+
+		expect(mockClineProvider.postMessageToWebview).toHaveBeenCalledWith({
+			type: "singleRouterModelFetchResponse",
+			success: false,
+			error: "Vercel AI Gateway error",
+			values: { provider: "vercel-ai-gateway" },
+		})
+
+		expect(mockClineProvider.postMessageToWebview).toHaveBeenCalledWith({
+			type: "singleRouterModelFetchResponse",
+			success: false,
 			error: "DeepInfra API error",
 			values: { provider: "deepinfra" },
 		})
@@ -521,8 +535,8 @@ describe("webviewMessageHandler - requestRouterModels", () => {
 		expect(mockClineProvider.postMessageToWebview).toHaveBeenCalledWith({
 			type: "singleRouterModelFetchResponse",
 			success: false,
-			error: "LiteLLM connection failed",
-			values: { provider: "litellm" },
+			error: "Nano-GPT API error",
+			values: { provider: "nano-gpt" },
 		})
 
 		// kilocode_change start
@@ -532,14 +546,14 @@ describe("webviewMessageHandler - requestRouterModels", () => {
 			error: "OVHCloud AI Endpoints error",
 			values: { provider: "ovhcloud" },
 		})
+		// kilocode_change end
 
 		expect(mockClineProvider.postMessageToWebview).toHaveBeenCalledWith({
 			type: "singleRouterModelFetchResponse",
 			success: false,
-			error: "Nano-GPT API error",
-			values: { provider: "nano-gpt" },
+			error: "LiteLLM connection failed",
+			values: { provider: "litellm" },
 		})
-		// kilocode_change end
 	})
 
 	it("prefers config values over message values for LiteLLM", async () => {
