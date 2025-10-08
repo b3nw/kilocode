@@ -25,23 +25,6 @@ export abstract class BasePromptStrategy implements PromptStrategy {
 	abstract canHandle(context: GhostSuggestionContext): boolean
 
 	/**
-	 * Filters the context to only include relevant fields for this strategy
-	 */
-	abstract getRelevantContext(context: GhostSuggestionContext): Partial<GhostSuggestionContext>
-
-	/**
-	 * Generates system instructions for the AI model
-	 */
-	getSystemInstructions(customInstructions?: string): string {
-		const baseInstructions = this.getBaseSystemInstructions()
-		const specificInstructions = this.getSpecificSystemInstructions()
-
-		return `${baseInstructions}\n\n---\n\n${specificInstructions}${
-			customInstructions ? `\n\n---\n\n${customInstructions}` : ""
-		}`
-	}
-
-	/**
 	 * Gets the base system instructions that apply to all strategies
 	 */
 	protected getBaseSystemInstructions(): string {
@@ -78,28 +61,23 @@ EXAMPLE:
 	 // old code
 }]]></search><replace><![CDATA[function example() {
 	 // new code
-}]]></replace></change>`
+}]]></replace></change>
+
+--
+
+`
 	}
 
 	/**
 	 * Gets strategy-specific system instructions
 	 * Must be implemented by each strategy
 	 */
-	protected abstract getSpecificSystemInstructions(): string
+	abstract getSystemInstructions(): string
 
 	/**
 	 * Generates the user prompt with context
 	 */
-	getUserPrompt(context: GhostSuggestionContext): string {
-		const relevantContext = this.getRelevantContext(context)
-		return this.buildUserPrompt(relevantContext)
-	}
-
-	/**
-	 * Builds the user prompt from the relevant context
-	 * Must be implemented by each strategy
-	 */
-	protected abstract buildUserPrompt(context: Partial<GhostSuggestionContext>): string
+	abstract getUserPrompt(context: GhostSuggestionContext): string
 
 	/**
 	 * Adds the cursor marker to the document text at the specified position
@@ -136,36 +114,6 @@ EXAMPLE:
 	}
 
 	/**
-	 * Gets surrounding code context (lines before and after cursor)
-	 */
-	protected getSurroundingCode(
-		document: TextDocument,
-		range: Range,
-		linesBefore: number = 10,
-		linesAfter: number = 10,
-	): { before: string; after: string; currentLine: string } {
-		const currentLineNum = range.start.line
-		const startLine = Math.max(0, currentLineNum - linesBefore)
-		const endLine = Math.min(document.lineCount - 1, currentLineNum + linesAfter)
-
-		let before = ""
-		let after = ""
-		const currentLine = document.lineAt(currentLineNum).text
-
-		// Get lines before cursor
-		for (let i = startLine; i < currentLineNum; i++) {
-			before += document.lineAt(i).text + "\n"
-		}
-
-		// Get lines after cursor
-		for (let i = currentLineNum + 1; i <= endLine; i++) {
-			after += document.lineAt(i).text + "\n"
-		}
-
-		return { before, after, currentLine }
-	}
-
-	/**
 	 * Formats the document with cursor marker for the prompt
 	 */
 	protected formatDocumentWithCursor(document: TextDocument, range?: Range, languageId?: string): string {
@@ -175,65 +123,5 @@ EXAMPLE:
 		return `\`\`\`${lang}
 ${codeWithCursor}
 \`\`\``
-	}
-
-	/**
-	 * Gets the file path from the document
-	 */
-	protected getFilePath(document: TextDocument): string {
-		return document.uri.toString()
-	}
-
-	/**
-	 * Formats selected text for inclusion in prompts
-	 */
-	protected formatSelectedText(document: TextDocument, range: Range): string {
-		if (range.isEmpty) return ""
-
-		const selectedText = document.getText(range)
-		const startLine = range.start.line + 1
-		const endLine = range.end.line + 1
-
-		return `## Selected Code (Lines ${startLine}-${endLine})
-\`\`\`${document.languageId}
-${selectedText}
-\`\`\``
-	}
-
-	/**
-	 * Formats recent operations for inclusion in prompts
-	 */
-	protected formatRecentOperations(operations: any[]): string {
-		if (!operations || operations.length === 0) return ""
-
-		let result = "## Recent Actions\n"
-		operations.slice(0, 5).forEach((op, index) => {
-			result += `${index + 1}. ${op.description}\n`
-			if (op.content) {
-				result += `   \`\`\`\n   ${op.content}\n   \`\`\`\n`
-			}
-		})
-
-		return result
-	}
-
-	/**
-	 * Helper to check if a line appears to be incomplete
-	 */
-	protected isIncompleteStatement(line: string): boolean {
-		const trimmed = line.trim()
-
-		// Check for common incomplete patterns
-		const incompletePatterns = [
-			/^(if|else if|while|for|switch|try|catch)\s*\(.*\)\s*$/, // Control structures without body
-			/^(function|class|interface|type|enum)\s+\w+.*[^{]$/, // Declarations without body
-			/[,\+\-\*\/\=\|\&]\s*$/, // Operators at end
-			/^(const|let|var)\s+\w+\s*=\s*$/, // Variable declaration without value
-			/\.\s*$/, // Property access incomplete
-			/\(\s*$/, // Opening parenthesis
-			/^\s*\.\w*$/, // Method chaining incomplete
-		]
-
-		return incompletePatterns.some((pattern) => pattern.test(trimmed))
 	}
 }
