@@ -194,6 +194,8 @@ describe("webviewMessageHandler - requestRouterModels", () => {
 				litellmApiKey: "litellm-key",
 				litellmBaseUrl: "http://localhost:4000",
 				ovhCloudAiEndpointsApiKey: "ovhcloud-key", // kilocode_change
+				nanoGptApiKey: "nano-gpt-key",
+				nanoGptModelList: "all",
 			},
 		})
 	})
@@ -229,6 +231,11 @@ describe("webviewMessageHandler - requestRouterModels", () => {
 		expect(mockGetModels).toHaveBeenCalledWith({ provider: "chutes", apiKey: "chutes-key" }) // kilocode_change
 		expect(mockGetModels).toHaveBeenCalledWith({ provider: "vercel-ai-gateway" })
 		expect(mockGetModels).toHaveBeenCalledWith({
+			provider: "nano-gpt",
+			apiKey: "nano-gpt-key",
+			nanoGptModelList: "all",
+		})
+		expect(mockGetModels).toHaveBeenCalledWith({
 			provider: "litellm",
 			apiKey: "litellm-key",
 			baseUrl: "http://localhost:4000",
@@ -254,6 +261,7 @@ describe("webviewMessageHandler - requestRouterModels", () => {
 				huggingface: {},
 				"io-intelligence": {},
 				ovhcloud: mockModels, // kilocode_change
+				"nano-gpt": mockModels,
 			},
 		})
 	})
@@ -266,6 +274,8 @@ describe("webviewMessageHandler - requestRouterModels", () => {
 				glamaApiKey: "glama-key",
 				unboundApiKey: "unbound-key",
 				ovhCloudAiEndpointsApiKey: "ovhcloud-key", // kilocode_change
+				nanoGptApiKey: "nano-gpt-key",
+				nanoGptModelList: "all",
 				// Missing litellm config
 			},
 		})
@@ -308,6 +318,8 @@ describe("webviewMessageHandler - requestRouterModels", () => {
 				ovhCloudAiEndpointsApiKey: "ovhcloud-key",
 				chutesApiKey: "chutes-key",
 				// kilocode_change end
+				nanoGptApiKey: "nano-gpt-key",
+				nanoGptModelList: "all",
 				// Missing litellm config
 			},
 		})
@@ -353,6 +365,7 @@ describe("webviewMessageHandler - requestRouterModels", () => {
 				huggingface: {},
 				"io-intelligence": {},
 				ovhcloud: mockModels, // kilocode_change
+				"nano-gpt": mockModels,
 			},
 		})
 	})
@@ -379,6 +392,7 @@ describe("webviewMessageHandler - requestRouterModels", () => {
 			.mockResolvedValueOnce(mockModels) // vercel-ai-gateway
 			.mockResolvedValueOnce(mockModels) // deepinfra
 			.mockResolvedValueOnce(mockModels) // kilocode_change ovhcloud
+			.mockResolvedValueOnce(mockModels) // nano-gpt
 			.mockRejectedValueOnce(new Error("LiteLLM connection failed")) // litellm
 
 		await webviewMessageHandler(mockClineProvider, {
@@ -403,6 +417,7 @@ describe("webviewMessageHandler - requestRouterModels", () => {
 				"vercel-ai-gateway": mockModels,
 				huggingface: {},
 				"io-intelligence": {},
+				"nano-gpt": mockModels,
 			},
 		})
 
@@ -451,6 +466,7 @@ describe("webviewMessageHandler - requestRouterModels", () => {
 			.mockRejectedValueOnce(new Error("Vercel AI Gateway error")) // vercel-ai-gateway
 			.mockRejectedValueOnce(new Error("DeepInfra API error")) // deepinfra
 			.mockRejectedValueOnce(new Error("OVHCloud AI Endpoints error")) // ovhcloud // kilocode_change
+			.mockRejectedValueOnce(new Error("Nano-GPT API error")) // nano-gpt
 			.mockRejectedValueOnce(new Error("LiteLLM connection failed")) // litellm
 
 		await webviewMessageHandler(mockClineProvider, {
@@ -515,6 +531,13 @@ describe("webviewMessageHandler - requestRouterModels", () => {
 			success: false,
 			error: "OVHCloud AI Endpoints error",
 			values: { provider: "ovhcloud" },
+		})
+
+		expect(mockClineProvider.postMessageToWebview).toHaveBeenCalledWith({
+			type: "singleRouterModelFetchResponse",
+			success: false,
+			error: "Nano-GPT API error",
+			values: { provider: "nano-gpt" },
 		})
 		// kilocode_change end
 	})
