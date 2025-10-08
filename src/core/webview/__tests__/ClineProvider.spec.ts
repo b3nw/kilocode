@@ -2705,8 +2705,8 @@ describe("ClineProvider - Router Models", () => {
 				litellmApiKey: "litellm-key",
 				litellmBaseUrl: "http://localhost:4000",
 				ovhCloudAiEndpointsApiKey: "ovhcloud-key", // kilocode_change
-				nanoGptApiKey: "nano-gpt-key",
-				nanoGptModelList: "all",
+				nanoGptApiKey: "nano-gpt-key", // kilocode_change
+				nanoGptModelList: "all", // kilocode_change
 			},
 		} as any)
 
@@ -2738,11 +2738,13 @@ describe("ClineProvider - Router Models", () => {
 		expect(getModels).toHaveBeenCalledWith({ provider: "chutes", apiKey: "chutes-key" }) // kilocode_change
 		expect(getModels).toHaveBeenCalledWith({ provider: "vercel-ai-gateway" })
 		expect(getModels).toHaveBeenCalledWith({ provider: "ovhcloud", apiKey: "ovhcloud-key" }) // kilocode_change
+		//kilocode_change start
 		expect(getModels).toHaveBeenCalledWith({
 			provider: "nano-gpt",
 			apiKey: "nano-gpt-key",
 			nanoGptModelList: "all",
 		})
+		//kilocode_change end
 		expect(getModels).toHaveBeenCalledWith({
 			provider: "litellm",
 			apiKey: "litellm-key",
@@ -2767,7 +2769,7 @@ describe("ClineProvider - Router Models", () => {
 				ovhcloud: mockModels, // kilocode_change
 				huggingface: {},
 				"io-intelligence": {},
-				"nano-gpt": mockModels,
+				"nano-gpt": mockModels, //kilocode_change
 			},
 		})
 	})
@@ -2786,8 +2788,10 @@ describe("ClineProvider - Router Models", () => {
 				litellmApiKey: "litellm-key",
 				litellmBaseUrl: "http://localhost:4000",
 				ovhCloudAiEndpointsApiKey: "ovhcloud-key", // kilocode_change
+				//kilocode_change start
 				nanoGptApiKey: "nano-gpt-key",
 				nanoGptModelList: "all",
+				//kilocode_change end
 			},
 		} as any)
 
@@ -2831,7 +2835,7 @@ describe("ClineProvider - Router Models", () => {
 				ovhcloud: mockModels, // kilocode_change
 				huggingface: {},
 				"io-intelligence": {},
-				"nano-gpt": mockModels,
+				"nano-gpt": mockModels, //kilocode_change
 			},
 		})
 
@@ -2896,8 +2900,10 @@ describe("ClineProvider - Router Models", () => {
 				ovhCloudAiEndpointsApiKey: "ovhcloud-key",
 				chutesApiKey: "chutes-key",
 				// kilocode_change end
+				//kilocode_change start
 				nanoGptApiKey: "nano-gpt-key",
 				nanoGptModelList: "all",
+				//kilocode_change end
 				// No litellm config
 			},
 		} as any)
@@ -2938,8 +2944,10 @@ describe("ClineProvider - Router Models", () => {
 				ovhCloudAiEndpointsApiKey: "ovhcloud-key",
 				chutesApiKey: "chutes-key",
 				// kilocode_change end
+				//kilocode_change start
 				nanoGptApiKey: "nano-gpt-key",
 				nanoGptModelList: "all",
+				//kilocode_change end
 				// No litellm config
 			},
 		} as any)
@@ -2977,7 +2985,7 @@ describe("ClineProvider - Router Models", () => {
 				ovhcloud: mockModels, // kilocode_change
 				huggingface: {},
 				"io-intelligence": {},
-				"nano-gpt": mockModels,
+				"nano-gpt": mockModels, //kilocode_change
 			},
 		})
 	})

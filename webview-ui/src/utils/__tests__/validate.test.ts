@@ -52,7 +52,7 @@ describe("Model Validation Functions", () => {
 				outputPrice: 15.0,
 			},
 		},
-		"nano-gpt": {},
+		"nano-gpt": {}, //kilocode_change
 		requesty: {},
 		unbound: {},
 		litellm: {},
