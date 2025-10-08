@@ -13,6 +13,7 @@ import { DEFAULT_HEADERS } from "./constants"
 import { BaseProvider } from "./base-provider"
 import type { SingleCompletionHandler } from "../index"
 import { handleOpenAIError } from "./utils/openai-error-handler"
+import { XmlMatcher } from "../../utils/xml-matcher"
 
 export class NanoGptHandler extends BaseProvider implements SingleCompletionHandler {
 	protected options: ApiHandlerOptions
@@ -65,6 +66,14 @@ export class NanoGptHandler extends BaseProvider implements SingleCompletionHand
 
 		let lastUsage: OpenAI.CompletionUsage | undefined = undefined
 
+		// Initialize XmlMatcher to parse <think>...</think> tags
+		const matcher = new XmlMatcher("think", (chunk) => {
+			return {
+				type: chunk.matched ? "reasoning" : "text",
+				text: chunk.data,
+			} as const
+		})
+
 		for await (const chunk of stream) {
 			if ("error" in chunk) {
 				const error = chunk.error as { message?: string; code?: number }
@@ -75,12 +84,20 @@ export class NanoGptHandler extends BaseProvider implements SingleCompletionHand
 			const delta = chunk.choices[0]?.delta
 
 			if (delta?.content) {
-				yield { type: "text", text: delta.content }
+				// Use XmlMatcher to parse <think>...</think> tags
+				for (const parsedChunk of matcher.update(delta.content)) {
+					yield parsedChunk
+				}
 			}
 
 			if (chunk.usage) {
 				lastUsage = chunk.usage
 			}
+		}
+
+		// Finalize any remaining content in the matcher
+		for (const parsedChunk of matcher.final()) {
+			yield parsedChunk
 		}
 
 		if (lastUsage) {

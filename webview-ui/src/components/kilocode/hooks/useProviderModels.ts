@@ -50,6 +50,7 @@ import {
 	cerebrasModels,
 	cerebrasDefaultModelId,
 	nanoGptDefaultModelId,
+	ovhCloudAiEndpointsDefaultModelId, // kilocode_change
 } from "@roo-code/types"
 import type { ModelRecord, RouterModels } from "@roo/api"
 import { useRouterModels } from "../../ui/hooks/useRouterModels"
@@ -278,6 +279,14 @@ export const getModelsByProvider = ({
 				defaultModel: nanoGptDefaultModelId,
 			}
 		}
+		// kilocode_change start
+		case "ovhcloud": {
+			return {
+				models: routerModels.ovhcloud,
+				defaultModel: ovhCloudAiEndpointsDefaultModelId,
+			}
+		}
+		// kilocode_change end
 		default:
 			return {
 				models: {},
@@ -295,6 +304,9 @@ export const useProviderModels = (apiConfiguration?: ProviderSettings) => {
 		openRouterBaseUrl: apiConfiguration?.openRouterBaseUrl,
 		openRouterApiKey: apiConfiguration?.apiKey,
 		kilocodeOrganizationId: apiConfiguration?.kilocodeOrganizationId ?? "personal",
+		chutesApiKey: apiConfiguration?.chutesApiKey, // kilocode_change
+		nanoGptApiKey: apiConfiguration?.nanoGptApiKey,
+		nanoGptModelList: apiConfiguration?.nanoGptModelList,
 	})
 
 	const { models, defaultModel } =

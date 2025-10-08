@@ -40,6 +40,7 @@ import {
 	vercelAiGatewayDefaultModelId,
 	deepInfraDefaultModelId,
 	nanoGptDefaultModelId,
+	ovhCloudAiEndpointsDefaultModelId, // kilocode_change
 } from "@roo-code/types"
 
 import { vscode } from "@src/utils/vscode"
@@ -106,6 +107,7 @@ import {
 	Featherless,
 	VercelAiGateway,
 	DeepInfra,
+	OvhCloudAiEndpoints, // kilocode_change
 } from "./providers"
 
 import { MODELS_BY_PROVIDER, PROVIDERS } from "./constants"
@@ -216,6 +218,9 @@ const ApiOptions = ({
 		openRouterApiKey: apiConfiguration?.openRouterApiKey,
 		kilocodeOrganizationId: apiConfiguration?.kilocodeOrganizationId ?? "personal",
 		deepInfraApiKey: apiConfiguration?.deepInfraApiKey,
+		chutesApiKey: apiConfiguration?.chutesApiKey,
+		nanoGptApiKey: apiConfiguration?.nanoGptApiKey,
+		nanoGptModelList: apiConfiguration?.nanoGptModelList,
 	})
 
 	//const { data: openRouterModelProviders } = useOpenRouterModelProviders(
@@ -383,6 +388,7 @@ const ApiOptions = ({
 				fireworks: { field: "apiModelId", default: fireworksDefaultModelId },
 				synthetic: { field: "apiModelId", default: syntheticDefaultModelId }, // kilocode_change
 				featherless: { field: "apiModelId", default: featherlessDefaultModelId },
+				ovhcloud: { field: "ovhCloudAiEndpointsModelId", default: ovhCloudAiEndpointsDefaultModelId }, // kilocode_change
 				"io-intelligence": { field: "ioIntelligenceModelId", default: ioIntelligenceDefaultModelId },
 				roo: { field: "apiModelId", default: rooDefaultModelId },
 				"vercel-ai-gateway": { field: "vercelAiGatewayModelId", default: vercelAiGatewayDefaultModelId },
@@ -569,6 +575,18 @@ const ApiOptions = ({
 					selectedModelInfo={selectedModelInfo}
 				/>
 			)}
+
+			{/* kilocode_change start */}
+			{selectedProvider === "ovhcloud" && (
+				<OvhCloudAiEndpoints
+					apiConfiguration={apiConfiguration}
+					setApiConfigurationField={setApiConfigurationField}
+					routerModels={routerModels}
+					organizationAllowList={organizationAllowList}
+					modelValidationError={modelValidationError}
+				/>
+			)}
+			{/* kilocode_change end */}
 
 			{selectedProvider === "mistral" && (
 				<Mistral apiConfiguration={apiConfiguration} setApiConfigurationField={setApiConfigurationField} />

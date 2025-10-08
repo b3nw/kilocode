@@ -800,11 +800,11 @@ export const webviewMessageHandler = async (
 				requesty: {},
 				unbound: {},
 				glama: {},
+				"nano-gpt": {},
 				chutes: {}, // kilocode_change
-				"nano-gpt": {},
-				"nano-gpt": {},
 				ollama: {},
 				lmstudio: {},
+				ovhcloud: {}, // kilocode_change
 			}
 
 			const safeGetModels = async (options: GetModelsOptions): Promise<ModelRecord> => {
@@ -866,6 +866,12 @@ export const webviewMessageHandler = async (
 						nanoGptModelList: apiConfiguration.nanoGptModelList,
 					},
 				},
+				// kilocode_change start
+				{
+					key: "ovhcloud",
+					options: { provider: "ovhcloud", apiKey: apiConfiguration.ovhCloudAiEndpointsApiKey },
+				},
+				// kilocode_change end
 			]
 			// kilocode_change end
 

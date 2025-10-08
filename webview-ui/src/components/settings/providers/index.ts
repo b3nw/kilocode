@@ -18,6 +18,7 @@ export { Ollama } from "./Ollama"
 export { OpenAI } from "./OpenAI"
 export { OpenAICompatible } from "./OpenAICompatible"
 export { OpenRouter } from "./OpenRouter"
+export { OvhCloudAiEndpoints } from "./OvhCloud" // kilocode_change
 export { QwenCode } from "./QwenCode"
 export { Requesty } from "./Requesty"
 export { SambaNova } from "./SambaNova"

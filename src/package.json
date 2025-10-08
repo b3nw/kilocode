@@ -3,7 +3,7 @@
 	"displayName": "%extension.displayName%",
 	"description": "%extension.description%",
 	"publisher": "kilocode",
-	"version": "4.99.2",
+	"version": "4.100.0",
 	"icon": "assets/icons/logo-outline-black.png",
 	"galleryBanner": {
 		"color": "#FFFFFF",
@@ -111,8 +111,7 @@
 					"id": "kilo-code-ActivityBar",
 					"title": "%views.activitybar.title%",
 					"icon": "assets/icons/kilo.png",
-					"darkIcon": "assets/icons/kilo-dark.png",
-					"when": "isMac"
+					"darkIcon": "assets/icons/kilo-dark.png"
 				}
 			]
 		},
@@ -121,7 +120,9 @@
 				{
 					"type": "webview",
 					"id": "kilo-code.SidebarProvider",
-					"name": "%views.sidebar.name%"
+					"name": "%views.sidebar.name%",
+					"icon": "assets/icons/kilo.png",
+					"darkIcon": "assets/icons/kilo-dark.png"
 				}
 			]
 		},

@@ -22,6 +22,7 @@ export { NanoGptHandler } from "./nano-gpt"
 export { OpenAiNativeHandler } from "./openai-native"
 export { OpenAiHandler } from "./openai"
 export { OpenRouterHandler } from "./openrouter"
+export { OVHCloudAIEndpointsHandler } from "./ovhcloud" // kilocode_change
 export { QwenCodeHandler } from "./qwen-code"
 export { RequestyHandler } from "./requesty"
 export { SambaNovaHandler } from "./sambanova"

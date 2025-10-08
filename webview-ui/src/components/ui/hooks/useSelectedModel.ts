@@ -63,6 +63,7 @@ import {
 	vercelAiGatewayDefaultModelId,
 	BEDROCK_1M_CONTEXT_MODEL_IDS,
 	deepInfraDefaultModelId,
+	ovhCloudAiEndpointsDefaultModelId, // kilocode_change
 } from "@roo-code/types"
 
 import type { ModelRecord, RouterModels } from "@roo/api"
@@ -449,6 +450,13 @@ function getSelectedModel({
 			const info = routerModels["nano-gpt"]?.[id]
 			return { id, info }
 		}
+		// kilocode_change start
+		case "ovhcloud": {
+			const id = apiConfiguration.ovhCloudAiEndpointsModelId ?? ovhCloudAiEndpointsDefaultModelId
+			const info = routerModels.ovhcloud[id]
+			return { id, info }
+		}
+		// kilocode_change end
 		// case "anthropic":
 		// case "human-relay":
 		// case "fake-ai":

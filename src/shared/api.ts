@@ -166,6 +166,7 @@ const dynamicProviderExtras = {
 	"nano-gpt": {} as { apiKey?: string; nanoGptModelList?: "all" | "personalized" | "subscription" },
 	ollama: {} as { numCtx?: number }, // kilocode_change
 	lmstudio: {} as {}, // eslint-disable-line @typescript-eslint/no-empty-object-type
+	ovhcloud: {} as { apiKey?: string }, // kilocode_change
 	chutes: {} as { apiKey?: string }, // kilocode_change
 } as const satisfies Record<RouterName, object>
 
