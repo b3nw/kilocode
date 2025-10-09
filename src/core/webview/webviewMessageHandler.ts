@@ -871,7 +871,11 @@ export const webviewMessageHandler = async (
 				// kilocode_change start
 				{
 					key: "ovhcloud",
-					options: { provider: "ovhcloud", apiKey: apiConfiguration.ovhCloudAiEndpointsApiKey },
+					options: {
+						provider: "ovhcloud",
+						apiKey: apiConfiguration.ovhCloudAiEndpointsApiKey,
+						baseUrl: apiConfiguration.ovhCloudAiEndpointsBaseUrl,
+					},
 				},
 				// kilocode_change end
 			]
@@ -1739,6 +1743,10 @@ export const webviewMessageHandler = async (
 			break
 		case "showTaskTimeline":
 			await updateGlobalState("showTaskTimeline", message.bool ?? false)
+			await provider.postStateToWebview()
+			break
+		case "hideCostBelowThreshold":
+			await updateGlobalState("hideCostBelowThreshold", message.value)
 			await provider.postStateToWebview()
 			break
 		case "allowVeryLargeReads":
