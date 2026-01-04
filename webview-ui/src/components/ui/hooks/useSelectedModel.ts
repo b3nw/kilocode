@@ -98,11 +98,13 @@ export const useSelectedModel = (apiConfiguration?: ProviderSettings) => {
 			geminiApiKey: apiConfiguration?.geminiApiKey,
 			googleGeminiBaseUrl: apiConfiguration?.googleGeminiBaseUrl,
 			syntheticApiKey: apiConfiguration?.syntheticApiKey,
+			openAiBaseUrl: apiConfiguration?.openAiBaseUrl,
+			openAiApiKey: apiConfiguration?.openAiApiKey,
 		},
 		// kilocode_change end
 		{
-			provider: shouldFetchRouterModels ? provider : undefined,
-			enabled: shouldFetchRouterModels,
+			provider: shouldFetchRouterModels || provider === "openai" ? provider : undefined,
+			enabled: shouldFetchRouterModels || provider === "openai",
 		},
 	)
 
@@ -328,9 +330,16 @@ function getSelectedModel({
 			return { id, info }
 		}
 		case "openai": {
+			// kilocode_change start - support fetching models for openai
 			const id = apiConfiguration.openAiModelId ?? ""
-			const info = apiConfiguration?.openAiCustomModelInfo ?? openAiModelInfoSaneDefaults
+			let info = apiConfiguration?.openAiCustomModelInfo ?? openAiModelInfoSaneDefaults
+
+			// If we have router models, try to use them to get better info
+			if (routerModels.openai && routerModels.openai[id]) {
+				info = routerModels.openai[id]
+			}
 			return { id, info }
+			// kilocode_change end
 		}
 		// kilocode_change start - improved context window handling
 		case "ollama": {

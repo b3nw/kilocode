@@ -211,7 +211,10 @@ const dynamicProviderExtras = {
 		sapAiCoreUseOrchestration?: boolean
 	},
 	// kilocode_change end
-} as const satisfies Record<RouterName, object>
+	// kilocode_change start - add openai as a router provider
+	openai: {} as { apiKey?: string; baseUrl?: string },
+	// kilocode_change end
+} as const satisfies Record<RouterName | "openai", object>
 
 // Build the dynamic options union from the map, intersected with CommonFetchParams
 // so extra fields are always allowed while required ones are enforced.

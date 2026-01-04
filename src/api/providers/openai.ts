@@ -569,8 +569,15 @@ export async function getOpenAiModels(baseUrl?: string, apiKey?: string, openAiH
 
 		const response = await axios.get(`${trimmedBaseUrl}/models`, config)
 		const modelsArray = response.data?.data?.map((model: any) => model.id) || []
-		return [...new Set<string>(modelsArray)]
+		const models = [...new Set<string>(modelsArray)]
+		return models.reduce((acc, modelId) => {
+			acc[modelId] = {
+				...openAiModelInfoSaneDefaults,
+				id: modelId, // Although ModelInfo doesn't strictly have id, it might be useful or at least doesn't hurt to have it key-aligned
+			}
+			return acc
+		}, {} as Record<string, ModelInfo>)
 	} catch (error) {
-		return []
+		return {}
 	}
 }
